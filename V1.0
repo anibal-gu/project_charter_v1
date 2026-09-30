@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Charter – International Data Science Conference</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:       #1a3a5c;
+      --primary-light: #2563a8;
+      --accent:        #0ea5e9;
+      --accent-soft:   #e0f2fe;
+      --success:       #16a34a;
+      --warning:       #d97706;
+      --danger:        #dc2626;
+      --neutral-50:    #f8fafc;
+      --neutral-100:   #f1f5f9;
+      --neutral-200:   #e2e8f0;
+      --neutral-300:   #cbd5e1;
+      --neutral-600:   #475569;
+      --neutral-700:   #334155;
+      --neutral-800:   #1e293b;
+      --neutral-900:   #0f172a;
+      --font-sans:     'Segoe UI', system-ui, -apple-system, sans-serif;
+      --font-mono:     'Cascadia Code', 'Fira Code', monospace;
+      --radius:        8px;
+      --shadow-sm:     0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+      --shadow-md:     0 4px 12px rgba(0,0,0,.10), 0 2px 4px rgba(0,0,0,.06);
+      --shadow-lg:     0 10px 30px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--neutral-800);
+      background: var(--neutral-100);
+    }
+
+    /* ── Page Wrapper ── */
+    .page {
+      max-width: 1100px;
+      margin: 0 auto;
+      background: #fff;
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* ── Cover Header ── */
+    .cover {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 60%, var(--accent) 100%);
+      color: #fff;
+      padding: 64px 56px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
+    }
+
+    .cover::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: -60px;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.04);
+    }
+
+    .cover-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.18);
+      border: 1px solid rgba(255,255,255,.30);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .cover h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 12px;
+      letter-spacing: -.02em;
+    }
+
+    .cover-sub {
+      font-size: 1.1rem;
+      opacity: .85;
+      margin-bottom: 36px;
+      max-width: 600px;
+    }
+
+    .cover-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .cover-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .cover-meta-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      opacity: .65;
+    }
+
+    .cover-meta-value {
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* ── Table of Contents ── */
+    .toc {
+      background: var(--neutral-50);
+      border-bottom: 1px solid var(--neutral-200);
+      padding: 32px 56px;
+    }
+
+    .toc h2 {
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--neutral-600);
+      margin-bottom: 16px;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 8px 24px;
+    }
+
+    .toc-grid a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary-light);
+      text-decoration: none;
+      font-size: 13.5px;
+      font-weight: 500;
+      padding: 4px 0;
+      border-bottom: 1px dashed var(--neutral-200);
+      transition: color .2s;
+    }
+
+    .toc-grid a:hover { color: var(--accent); }
+
+    .toc-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--neutral-300);
+      min-width: 22px;
+    }
+
+    /* ── Main Content ── */
+    .content {
+      padding: 48px 56px 64px;
+    }
+
+    /* ── Section ── */
+    .section {
+      margin-bottom: 56px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--neutral-200);
+    }
+
+    .section-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -.01em;
+    }
+
+    /* ── Sub-section ── */
+    .subsection {
+      margin-bottom: 28px;
+    }
+
+    .subsection-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--neutral-700);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subsection-title::before {
+      content: '';
+      display: inline-block;
+      width: 4px; height: 16px;
+      background: var(--accent);
+      border-radius: 2px;
+    }
+
+    /* ── Prose ── */
+    p { margin-bottom: 12px; color: var(--neutral-700); }
+    p:last-child { margin-bottom: 0; }
+
+    /* ── Lists ── */
+    ul, ol {
+      padding-left: 20px;
+      margin-bottom: 12px;
+      color: var(--neutral-700);
+    }
+
+    li { margin-bottom: 6px; }
+
+    li strong { color: var(--neutral-800); }
+
+    /* ── Objective Cards ── */
+    .objective-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+
+    .objective-card {
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius);
+      padding: 20px;
+      background: var(--neutral-50);
+      position: relative;
+      overflow: hidden;
+      transition: box-shadow .2s;
+    }
+
+    .objective-card:hover { box-shadow: var(--shadow-md); }
+
+    .objective-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 4px; height: 100%;
+      background: var(--primary-light);
+    }
+
+    .objective-card-num {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--primary-light);
+      margin-bottom: 6px;
+    }
+
+    .objective-card-title {
+      font-size: .95rem;
+      font-weight: 700;
+      color: var(--neutral-800);
+      margin-bottom: 8px;
+    }
+
+    .objective-card p {
+      font-size: .875rem;
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ── Info Boxes ── */
+    .info-box {
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .info-box-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .info-box-body { flex: 1; }
+    .info-box-body strong { display: block; margin-bottom: 4px; font-size: .9rem; }
+    .info-box-body p { font-size: .875rem; margin: 0; }
+
+    .info-box.blue   { background: #eff6ff; border-left: 4px solid #3b82f6; }
+    .info-box.green  { background: #f0fdf4; border-left: 4px solid #22c55e; }
+    .info-box.amber  { background: #fffbeb; border-left: 4px solid #f59e0b; }
+    .info-box.red    { background: #fef2f2; border-left: 4px solid #ef4444; }
+
+    /* ── Tables ── */
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    thead tr {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    thead th {
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    tbody tr { border-bottom: 1px solid var(--neutral-200); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:nth-child(even) { background: var(--neutral-50); }
+    tbody tr:hover { background: var(--accent-soft); }
+
+    tbody td {
+      padding: 11px 16px;
+      color: var(--neutral-700);
+      vertical-align: top;
+    }
+
+    tbody td:first-child { font-weight: 600; color: var(--neutral-800); }
+
+    /* ── Budget Bars ── */
+    .budget-bar-wrap { display: flex; align-items: center; gap: 10px; }
+
+    .budget-bar {
+      height: 8px;
+      border-radius: 4px;
+      background: var(--primary-light);
+      flex-shrink: 0;
+    }
+
+    .budget-pct { font-size: 12px; font-weight: 700; color: var(--primary-light); }
+
+    /* ── Risk Badges ── */
+    .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .badge-high     { background: #fee2e2; color: #b91c1c; }
+    .badge-medium   { background: #fef3c7; color: #92400e; }
+    .badge-low      { background: #dcfce7; color: #166534; }
+    .badge-critical { background: #fce7f3; color: #9d174d; }
+
+    /* ── RACI ── */
+    .raci-r { background: #dbeafe; color: #1d4ed8; font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+    .raci-a { background: #fce7f3; color: #9d174d; font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+    .raci-ar { background: linear-gradient(90deg,#fce7f3,#dbeafe); color: #1e3a5f; font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+    .raci-c { background: #f0fdf4; color: #166534; font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+    .raci-i { background: var(--neutral-100); color: var(--neutral-600); font-weight: 700; border-radius: 4px; padding: 2px 8px; font-size: 12px; }
+
+    /* ── WBS ── */
+    .wbs-section { margin-bottom: 20px; }
+
+    .wbs-level1 {
+      background: var(--primary);
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      font-weight: 700;
+      font-size: .9rem;
+    }
+
+    .wbs-level2 {
+      background: var(--accent-soft);
+      border-left: 3px solid var(--accent);
+      padding: 8px 16px 8px 24px;
+      font-weight: 600;
+      font-size: .875rem;
+      color: var(--primary);
+      border-bottom: 1px solid var(--neutral-200);
+    }
+
+    .wbs-level3 {
+      padding: 6px 16px 6px 40px;
+      font-size: .85rem;
+      color: var(--neutral-700);
+      border-bottom: 1px solid var(--neutral-100);
+      border-left: 3px solid var(--neutral-200);
+    }
+
+    .wbs-level3:last-child { border-bottom: none; }
+
+    .wbs-body {
+      border: 1px solid var(--neutral-200);
+      border-top: none;
+      border-radius: 0 0 var(--radius) var(--radius);
+      overflow: hidden;
+    }
+
+    /* ── Governance Cards ── */
+    .gov-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .gov-card {
+      border: 1px solid var(--neutral-200);
+      border-radius: var(--radius);
+      padding: 18px;
+      background: var(--neutral-50);
+    }
+
+    .gov-card-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--neutral-600);
+      margin-bottom: 6px;
+    }
+
+    .gov-card-name {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .gov-card-role {
+      font-size: .8rem;
+      color: var(--neutral-600);
+    }
+
+    /* ── Escalation Steps ── */
+    .escalation {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+
+    .escalation::before {
+      content: '';
+      position: absolute;
+      left: 18px; top: 36px; bottom: 36px;
+      width: 2px;
+      background: var(--neutral-200);
+    }
+
+    .escalation-step {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 12px 0;
+    }
+
+    .escalation-dot {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .escalation-body strong { display: block; font-size: .9rem; color: var(--neutral-800); }
+    .escalation-body p { font-size: .85rem; color: var(--neutral-600); margin: 0; }
+
+    /* ── Signature Table ── */
+    .sig-table td { padding: 14px 16px; }
+    .sig-line {
+      display: block;
+      width: 160px;
+      border-bottom: 1px solid var(--neutral-400);
+      height: 28px;
+      margin-top: 4px;
+    }
+
+    /* ── Footer ── */
+    .doc-footer {
+      background: var(--primary);
+      color: rgba(255,255,255,.7);
+      padding: 20px 56px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .doc-footer strong { color: #fff; }
+
+    /* ── Print ── */
+    @media print {
+      body { background: #fff; }
+      .page { box-shadow: none; max-width: 100%; }
+      .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      .cover, .toc, .content { padding-left: 24px; padding-right: 24px; }
+      .cover h1 { font-size: 1.8rem; }
+      .objective-grid { grid-template-columns: 1fr; }
+      .gov-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══════════════════════════════════════════
+       COVER
+  ══════════════════════════════════════════ -->
+  <header class="cover">
+    <div class="cover-badge">Project Charter · Version 1.0</div>
+    <h1>International Data Science Conference</h1>
+    <p class="cover-sub">
+      A strategic initiative to foster networking, skill development, and career
+      opportunities for the university community at Campus Guadalajara.
+    </p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Event Date</span>
+        <span class="cover-meta-value">March 22, 2027</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Project Manager</span>
+        <span class="cover-meta-value">Aníbal González Urteaga</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Sponsor</span>
+        <span class="cover-meta-value">Campus Guadalajara Administration</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Category</span>
+        <span class="cover-meta-value">Technology / IT</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Venue Capacity</span>
+        <span class="cover-meta-value">500 Attendees</span>
+      </div>
+      <div class="cover-meta-item">
+        <span class="cover-meta-label">Reimbursement Deadline</span>
+        <span class="cover-meta-value">March 29, 2027</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ══════════════════════════════════════════
+       TABLE OF CONTENTS
+  ══════════════════════════════════════════ -->
+  <nav class="toc">
+    <h2>Table of Contents</h2>
+    <div class="toc-grid">
+      <a href="#s1"><span class="toc-num">1.0</span> Background</a>
+      <a href="#s2"><span class="toc-num">2.0</span> Scope</a>
+      <a href="#s3"><span class="toc-num">3.0</span> Objectives</a>
+      <a href="#s4"><span class="toc-num">4.0</span> Governance</a>
+      <a href="#s5"><span class="toc-num">5.0</span> Budget</a>
+      <a href="#s6"><span class="toc-num">6.0</span> Assumptions, Constraints &amp; Dependencies</a>
+      <a href="#s7"><span class="toc-num">7.0</span> Work Breakdown Structure</a>
+      <a href="#s8"><span class="toc-num">8.0</span> Responsibility Matrix (RACI)</a>
+      <a href="#s9"><span class="toc-num">9.0</span> Approval Signatures</a>
+    </div>
+  </nav>
+
+  <!-- ══════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════ -->
+  <main class="content">
+
+    <!-- ── 1. Background ── -->
+    <section class="section" id="s1">
+      <div class="section-header">
+        <div class="section-number">1</div>
+        <h2 class="section-title">Background</h2>
+      </div>
+      <p>
+        The International Data Science Conference is a strategic initiative designed to foster
+        networking, skill development, and career opportunities for the university community.
+        Scheduled for <strong>March 22, 2027</strong>, this Technology/IT project addresses the
+        growing demand for practical Data Science education and industry connections among
+        undergraduate students, postgraduate students, and the broader university public at
+        <strong>Campus Guadalajara</strong>.
+      </p>
+      <p>
+        The conference serves as a platform to bridge academic learning with industry practice by
+        connecting students with leading companies in the Data Science field. Through hands-on
+        workshops, networking sessions, and recruitment opportunities, the event aims to enhance
+        participants' technical competencies while providing direct access to career pathways.
+        The project aligns with the university's strategic goals of industry engagement, student
+        employability, and academic excellence in emerging technology fields.
+      </p>
+      <div class="info-box blue">
+        <span class="info-box-icon">💡</span>
+        <div class="info-box-body">
+          <strong>Financial Mandate</strong>
+          <p>
+            Campus Guadalajara has authorized this initiative with the requirement that all
+            allocated funds be fully reimbursed within one week following the conference through
+            a combination of ticket sales, corporate sponsorships, and other revenue streams.
+            This self-sustaining financial model demonstrates fiscal responsibility while
+            maximizing accessibility and impact for the university community.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 2. Scope ── -->
+    <section class="section" id="s2">
+      <div class="section-header">
+        <div class="section-number">2</div>
+        <h2 class="section-title">Scope</h2>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">2.1 In Scope</h3>
+        <ul>
+          <li><strong>Venue Selection &amp; Management:</strong> Identification and booking of a 500-capacity venue based on target audience accessibility, cost-effectiveness, and facility requirements (AV equipment, breakout rooms, networking spaces).</li>
+          <li><strong>Marketing &amp; Promotion:</strong> Comprehensive advertisement campaign including digital marketing, campus outreach, email campaigns, and social media promotion to drive registration.</li>
+          <li><strong>Corporate Partnership Program:</strong> Outreach to and coordination of at least five recognized companies (Fortune 1000, major tech firms, or established Data Science employers) to provide on-site recruitment booths and networking participation.</li>
+          <li><strong>Learning Activities:</strong> Design and delivery of three distinct 90-minute hands-on Data Science workshops (Machine Learning Basics, Data Visualization, Python for Data Analysis) with materials and facilitator coordination.</li>
+          <li><strong>Financial Management:</strong> Budget development, revenue generation through ticket sales and sponsorships, expense tracking, and complete fund reimbursement within seven days post-event.</li>
+          <li><strong>Event Logistics:</strong> Registration system, attendee management, day-of-event coordination, basic refreshments, and technical support.</li>
+          <li><strong>Reporting &amp; Documentation:</strong> Attendance estimation within three weeks of project start, final comprehensive report to Campus Guadalajara including financial reconciliation and recommendations.</li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">2.2 Out of Scope</h3>
+        <ul>
+          <li>Post-event community building, ongoing Data Science programs, or alumni networks.</li>
+          <li>Recording, editing, post-production, or distribution of conference content.</li>
+          <li>Full catering services beyond basic refreshments (coffee, light snacks).</li>
+          <li>Transportation, accommodation, or travel arrangements for attendees or speakers.</li>
+          <li>Follow-up job placement services, recruitment tracking, or career counseling.</li>
+          <li>Merchandise production or sales.</li>
+          <li>Multi-day or satellite events beyond the March 22, 2027 conference date.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── 3. Objectives ── -->
+    <section class="section" id="s3">
+      <div class="section-header">
+        <div class="section-number">3</div>
+        <h2 class="section-title">Objectives</h2>
+      </div>
+      <div class="objective-grid">
+
+        <div class="objective-card">
+          <div class="objective-card-num">Objective 1</div>
+          <div class="objective-card-title">Attendance Target</div>
+          <p>Achieve confirmed registration of at least <strong>300 attendees</strong> (60% of 500-capacity venue) by March 15, 2027. Minimum demographic distribution: 40% undergraduate, 30% postgraduate, 30% general university public.</p>
+        </div>
+
+        <div class="objective-card">
+          <div class="objective-card-num">Objective 2</div>
+          <div class="objective-card-title">Attendance Forecasting</div>
+          <p>Complete and submit a data-driven attendance forecast with <strong>±15% accuracy margin</strong> by project start + 3 weeks, based on ≥200 survey responses, historical data, and venue capacity analysis. Approved by Campus Guadalajara.</p>
+        </div>
+
+        <div class="objective-card">
+          <div class="objective-card-num">Objective 3</div>
+          <div class="objective-card-title">Corporate Participation</div>
+          <p>Secure written commitments from at least <strong>five recognized companies</strong> (Fortune 1000, major tech firms, or established Data Science employers) to provide on-site recruitment booths by <strong>February 15, 2027</strong>.</p>
+        </div>
+
+        <div class="objective-card">
+          <div class="objective-card-num">Objective 4</div>
+          <div class="objective-card-title">Learning Activities</div>
+          <p>Design, promote, and deliver <strong>three distinct 90-minute workshops</strong> with minimum 25 participants each on March 22, 2027. Post-session satisfaction ratings averaging <strong>4.0/5.0 or higher</strong>.</p>
+        </div>
+
+        <div class="objective-card">
+          <div class="objective-card-num">Objective 5</div>
+          <div class="objective-card-title">Financial Accountability</div>
+          <p>Submit a comprehensive final report to Campus Guadalajara by <strong>March 29, 2027</strong> including detailed budget, 100% fund reimbursement documentation, attendance analytics, company outcomes, and future recommendations.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── 4. Governance ── -->
+    <section class="section" id="s4">
+      <div class="section-header">
+        <div class="section-number">4</div>
+        <h2 class="section-title">Governance</h2>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">4.1 Authority Structure</h3>
+        <div class="gov-grid">
+          <div class="gov-card">
+            <div class="gov-card-label">Project Sponsor</div>
+            <div class="gov-card-name">Campus Guadalajara Administration</div>
+            <div class="gov-card-role">Budget approval, major scope changes, final report acceptance</div>
+          </div>
+          <div class="gov-card">
+            <div class="gov-card-label">Project Manager</div>
+            <div class="gov-card-name">Aníbal González Urteaga</div>
+            <div class="gov-card-role">Overall project coordination, final reporting, investment strategy</div>
+          </div>
+          <div class="gov-card">
+            <div class="gov-card-label">Steering Committee</div>
+            <div class="gov-card-name">Campus Guadalajara Governance Board</div>
+            <div class="gov-card-role">Budget approval, major scope changes, final report acceptance</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">4.2 Decision-Making Authority</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Decision Area</th>
+                <th>Authority</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Budget allocations up to 10% variance</td><td>Project Manager</td></tr>
+              <tr><td>Budget changes exceeding 10%</td><td>Steering Committee approval required</td></tr>
+              <tr><td>Venue selection</td><td>Project Manager with Steering Committee consultation</td></tr>
+              <tr><td>Corporate partnership agreements</td><td>Luimanol Rivas Torres with Project Manager approval</td></tr>
+              <tr><td>Marketing strategy and materials</td><td>Ian Ricardo Villarreal Rios with Project Manager consultation</td></tr>
+              <tr><td>Workshop content and facilitators</td><td>Andrés Crisostomo Gómez with Project Manager approval</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">4.3 Reporting &amp; Communication</h3>
+        <ul>
+          <li><strong>Weekly status meetings:</strong> All team members, chaired by Project Manager.</li>
+          <li><strong>Bi-weekly progress reports:</strong> Project Manager to Steering Committee.</li>
+          <li><strong>Milestone reviews:</strong> Formal review at attendance estimation completion, corporate commitments secured, and two weeks pre-event.</li>
+          <li><strong>Final report:</strong> Comprehensive documentation submitted March 29, 2027.</li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">4.4 Escalation Procedures</h3>
+        <div class="escalation">
+          <div class="escalation-step">
+            <div class="escalation-dot">1</div>
+            <div class="escalation-body">
+              <strong>Level 1 – Team</strong>
+              <p>Issues resolved within team within 48 hours.</p>
+            </div>
+          </div>
+          <div class="escalation-step">
+            <div class="escalation-dot">2</div>
+            <div class="escalation-body">
+              <strong>Level 2 – Project Manager</strong>
+              <p>Unresolved issues escalated to Project Manager for resolution within 5 business days.</p>
+            </div>
+          </div>
+          <div class="escalation-step">
+            <div class="escalation-dot">3</div>
+            <div class="escalation-body">
+              <strong>Level 3 – Steering Committee</strong>
+              <p>Critical issues affecting budget, timeline, or objectives escalated to Steering Committee for immediate resolution.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">4.5 Change Control</h3>
+        <div class="info-box amber">
+          <span class="info-box-icon">⚠️</span>
+          <div class="info-box-body">
+            <strong>Change Request Process</strong>
+            <p>All scope, budget, or timeline changes require a written change request submitted to the Project Manager, impact analysis completed within 3 business days, and Steering Committee approval for changes affecting core objectives or budget exceeding 10%.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 5. Budget ── -->
+    <section class="section" id="s5">
+      <div class="section-header">
+        <div class="section-number">5</div>
+        <h2 class="section-title">Budget</h2>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">5.1 Budget Framework</h3>
+        <p>Campus Guadalajara provides initial investment with mandatory <strong>100% reimbursement within one week post-event</strong> (by March 29, 2027). Final budget allocation subject to Steering Committee approval based on attendance forecast and revenue projections.</p>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">5.2 Estimated Budget Allocation</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Estimated Allocation</th>
+                <th>Visual</th>
+                <th>Revenue Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Venue Rental</td>
+                <td>30%</td>
+                <td><div class="budget-bar-wrap"><div class="budget-bar" style="width:90px"></div><span class="budget-pct">30%</span></div></td>
+                <td>Ticket Sales (60%)</td>
+              </tr>
+              <tr>
+                <td>Marketing &amp; Advertising</td>
+                <td>25%</td>
+                <td><div class="budget-bar-wrap"><div class="budget-bar" style="width:75px"></div><span class="budget-pct">25%</span></div></td>
+                <td>Corporate Sponsorships (35%)</td>
+              </tr>
+              <tr>
+                <td>Workshop Materials &amp; Facilitators</td>
+                <td>20%</td>
+                <td><div class="budget-bar-wrap"><div class="budget-bar" style="width:60px"></div><span class="budget-pct">20%</span></div></td>
+                <td>University Subsidy (5%)</td>
+              </tr>
+              <tr>
+                <td>Technology &amp; Registration Systems</td>
+                <td>10%</td>
+                <td><div class="budget-bar-wrap"><div class="budget-bar" style="width:30px"></div><span class="budget-pct">10%</span></div></td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>Event Day Operations</td>
+                <td>10%</td>
+                <td><div class="budget-bar-wrap"><div class="budget-bar" style="width:30px"></div><span class="budget-pct">10%</span></div></td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td>Contingency Reserve</td>
+                <td>5%</td>
+                <td><div class="budget-bar-wrap"><div class="budget-bar" style="width:15px; background:#94a3b8"></div><span class="budget-pct" style="color:#94a3b8">5%</span></div></td>
+                <td>—</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">5.3 Revenue Model</h3>
+        <ul>
+          <li><strong>Ticket Sales:</strong> Tiered pricing structure (student rate, general admission) targeting 300 attendees.</li>
+          <li><strong>Corporate Sponsorship Packages:</strong> Three-tier system (Platinum, Gold, Silver) offering booth space, branding, and networking access.</li>
+          <li><strong>University Support:</strong> Limited subsidy for educational components aligned with institutional priorities.</li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">5.4 Financial Controls</h3>
+        <ul>
+          <li>Monthly budget reviews with variance analysis.</li>
+          <li>All expenditures require dual authorization (budget holder + Project Manager).</li>
+          <li>Revenue tracking dashboard updated weekly.</li>
+          <li>Payment processing arrangements to ensure funds available by March 29, 2027 deadline.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ── 6. Assumptions, Constraints & Dependencies ── -->
+    <section class="section" id="s6">
+      <div class="section-header">
+        <div class="section-number">6</div>
+        <h2 class="section-title">Assumptions, Constraints &amp; Dependencies</h2>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">6.1 Assumptions</h3>
+        <ul>
+          <li>University corporate partnership agreements provide direct access to at least 10 potential company partners.</li>
+          <li>Target audience has demonstrated interest in Data Science topics based on enrollment trends and previous event attendance.</li>
+          <li>Campus Guadalajara will provide administrative support for contract processing and vendor management.</li>
+          <li>Registration system and payment processing infrastructure available through university IT services.</li>
+          <li>Workshop facilitators available from faculty, industry partners, or graduate student pool.</li>
+          <li>March 22, 2027 date does not conflict with major academic calendar events (exams, holidays, competing conferences).</li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">6.2 Constraints</h3>
+        <ul>
+          <li><strong>Timeline:</strong> Fixed event date of March 22, 2027; three-week deadline for attendance estimation; one-week post-event reimbursement deadline.</li>
+          <li><strong>Financial:</strong> 100% fund reimbursement requirement; no deficit financing permitted.</li>
+          <li><strong>Resource:</strong> Team members balancing project responsibilities with academic or professional commitments.</li>
+          <li><strong>Venue:</strong> Limited availability of suitable 500-capacity venues within budget parameters.</li>
+          <li><strong>Authority:</strong> Team requires university approval for corporate agreements and vendor contracts.</li>
+        </ul>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">6.3 Dependencies</h3>
+        <div class="info-box blue">
+          <span class="info-box-icon">🔗</span>
+          <div class="info-box-body">
+            <strong>Critical Path Dependencies</strong>
+            <p>Attendance estimation → Venue finalization → Marketing campaign launch → Corporate commitments → Sponsorship revenue projections → Workshop facilitator confirmation (6 weeks before event) → Registration system operational (8 weeks before event).</p>
+          </div>
+        </div>
+        <div class="info-box amber">
+          <span class="info-box-icon">🌐</span>
+          <div class="info-box-body">
+            <strong>External Dependencies</strong>
+            <p>University approval processes for venue booking and budget allocation; corporate partner decision timelines and contract execution; vendor availability (AV equipment, catering, printing services); payment processing timelines for ticket sales and sponsorship payments.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="subsection">
+        <h3 class="subsection-title">6.4 Risk Register</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Risk</th>
+                <th>Impact</th>
+                <th>Likelihood</th>
+                <th>Mitigation Strategy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Low attendance (&lt;60%)</td>
+                <td><span class="badge badge-high">High</span></td>
+                <td><span class="badge badge-medium">Medium</span></td>
+                <td>Tiered marketing with escalation triggers; early-bird incentives; faculty endorsements.</td>
+              </tr>
+              <tr>
+                <td>Reimbursement deadline not met</td>
+                <td><span class="badge badge-critical">Critical</span></td>
+                <td><span class="badge badge-medium">Medium</span></td>
+                <td>Negotiate 30-day extension; secure bridge funding; accelerate payment processing.</td>
+              </tr>
+              <tr>
+                <td>Insufficient corporate participation</td>
+                <td><span class="badge badge-high">High</span></td>
+                <td><span class="badge badge-low">Low</span></td>
+                <td>Leverage university agreements early; expand outreach beyond initial target list.</td>
+              </tr>
+              <tr>
+                <td>Venue unavailable / unaffordable</td>
+                <td><span class="badge badge-high">High</span></td>
+                <td><span class="badge badge-medium">Medium</span></td>
+                <td>Identify 3 backup venues; begin venue search immediately upon project start.</td>
+              </tr>
+              <tr>
+                <td>Workshop facilitator cancellations</td>
+                <td><span class="badge badge-medium">Medium</span></td>
+                <td><span class="badge badge-low">Low</span></td>
+                <td>Secure backup facilitators; develop contingency content.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 7. WBS ── -->
+    <section class="section" id="s7">
+      <div class="section-header">
+        <div class="section-number">7</div>
+        <h2 class="section-title">Work Breakdown Structure (WBS)</h2>
+      </div>
+
+      <!-- 1.0 Project Management -->
+      <div class="wbs-section">
+        <div class="wbs-level1">1.0 Project Management</div>
+        <div class="wbs-body">
+          <div class="wbs-level2">1.1 Project Initiation</div>
+          <div class="wbs-level3">1.1.1 Charter development and approval</div>
+          <div class="wbs-level3">1.1.2 Team kickoff and role clarification</div>
+          <div class="wbs-level3">1.1.3 Stakeholder identification and engagement plan</div>
+          <div class="wbs-level2">1.2 Project Planning</div>
+          <div class="wbs-level3">1.2.1 Detailed project schedule development</div>
+          <div class="wbs-level3">1.2.2 Risk management plan</div>
+          <div class="wbs-level3">1.2.3 Communication plan</div>
+          <div class="wbs-level2">1.3 Project Monitoring &amp; Control</div>
+          <div class="wbs-level3">1.3.1 Weekly status meetings and reports</div>
+          <div class="wbs-level3">1.3.2 Budget tracking and variance analysis</div>
+          <div class="wbs-level3">1.3.3 Change control processing</div>
+          <div class="wbs-level2">1.4 Project Closure</div>
+          <div class="wbs-level3">1.4.1 Final report preparation</div>
+          <div class="wbs-level3">1.4.2 Financial reconciliation</div>
+          <div class="wbs-level3">1.4.3 Lessons learned documentation</div>
+        </div>
+      </div>
+
+      <!-- 2.0 Market Research -->
+      <div class="wbs-section">
+        <div class="wbs-level1">2.0 Market Research &amp; Forecasting</div>
+        <div class="wbs-body">
+          <div class="wbs-level2">2.1 Target Audience Analysis</div>
+          <div class="wbs-level3">2.1.1 Survey design and distribution (200+ responses)</div>
+          <div class="wbs-level3">2.1.2 Historical data analysis from similar events</div>
+          <div class="wbs-level3">2.1.3 Demographic segmentation analysis</div>
+          <div class="wbs-level2">2.2 Attendance Estimation</div>
+          <div class="wbs-level3">2.2.1 Forecasting model development</div>
+          <div class="wbs-level3">2.2.2 Validation and accuracy assessment</div>
+          <div class="wbs-level3">2.2.3 Estimation report submission to Campus Guadalajara</div>
+        </div>
+      </div>
+
+      <!-- 3.0 Venue -->
+      <div class="wbs-section">
+        <div class="wbs-level1">3.0 Venue Selection &amp; Management</div>
+        <div class="wbs-body">
+          <div class="wbs-level2">3.1 Venue Requirements Definition</div>
+          <div class="wbs-level3">3.1.1 Capacity, location, and facility specifications</div>
+          <div class="wbs-level3">3.1.2 Budget parameters and cost analysis</div>
+          <div class="wbs-level2">3.2 Venue Evaluation &amp; Selection</div>
+          <div class="wbs-level3">3.2.1 Site visits and vendor negotiations</div>
+          <div class="wbs-level3">3.2.2 Contract review and execution</div>
+          <div class="wbs-level2">3.3 Venue Coordination</div>
+          <div class="wbs-level3">3.3.1 Layout planning and space allocation</div>
+          <div class="wbs-level3">3.3.2 Technical requirements coordination</div>
+          <div class="wbs-level3">3.3.3 Day-of-event logistics</div>
+        </div>
+      </div>
+
+      <!-- 4.0 Corporate Partnership -->
+      <div class="wbs-section">
+        <div class="wbs-level1">4.0 Corporate Partnership Program</div>
+        <div class="wbs-body">
+          <div class="wbs-level2">4.1 Company Identification &amp; Outreach</div>
+          <div class="wbs-level3">4.1.1 Target company list development (Fortune 1000, tech firms)</div>
+          <div class="wbs-level3">4.1.2 University partnership agreement activation</div>
+          <div class="wbs-level3">4.1.3 Initial contact and interest assessment</div>
+          <div class="wbs-level2">4.2 Sponsorship Package Development</div>
+          <div class="wbs-level3">4.2.1 Tiered sponsorship structure design</div>
+          <div class="wbs-level3">4.2.2 Benefits and deliverables definition</div>
+          <div class="wbs-level3">4.2.3 Pricing strategy</div>
+          <div class="wbs-level2">4.3 Partnership Execution</div>
+          <div class="wbs-level3">4.3.1 Proposal presentations and negotiations</div>
+          <div class="wbs-level3">4.3.2 Contract finalization (minimum 5 companies)</div>
+          <div class="wbs-level3">4.3.3 Booth and networking logistics coordination</div>
+        </div>
+      </div>
+
+      <!-- 5.0 Marketing -->
+      <div class="wbs-section">
+        <div class="wbs-level1">5.0 Marketing &amp; Promotion</div>
+        <div class="wbs-body">
+          <div class="wbs-level2">5.1 Marketing Strategy Development</div>
+          <div class="wbs-level3">5.1.1 Target audience segmentation and messaging</div>
+          <div class="wbs-level3">5.1.2 Channel selection and budget allocation</div>
+          <div class="wbs-level3">5.1.3 Timeline and campaign milestones</div>
+          <div class="wbs-level2">5.2 Marketing Materials Creation</div>
+          <div class="wbs-level3">5.2.1 Visual identity and branding</div>
+          <div class="wbs-level3">5.2.2 Digital assets (website, social media, email templates)</div>
+          <div class="wbs-level3">5.2.3 Print materials (posters, flyers)</div>
+          <div class="wbs-level2">5.3 Campaign Execution</div>
+          <div class="wbs-level3">5.3.1 Digital marketing launch and management</div>
+          <div class="wbs-level3">5.3.2 Campus outreach and faculty engagement</div>
+          <div class="wbs-level3">5.3.3 Registration tracking and conversion optimization</div>
+        </div>
+      </div>
+
+      <!-- 6.0 Learning Activities -->
+      <div class="wbs-section">
+        <div class="wbs-level1">6.0 Learning Activities Development</div>
+        <div class="wbs-body">
+          <div class="wbs-level2">6.1 Workshop Design</div>
+          <div class="wbs-level3">6.1.1 Topic selection and learning objectives (ML, Visualization, Python)</div>
+          <div class="wbs-level3">6.1.2 Curriculum and hands-on exercise development</div>
+          <div class="wbs-level3">6.1.3 Materials preparation and technology requirements</div>
+          <div class="wbs-level2">6.2 Facilitator Coordination</div>
+          <div class="wbs-level3">6.2.1 Facilitator recruitment and confirmation</div>
+          <div class="wbs-level3">6.2.2 Briefing sessions and content review</div>
+          <div class="wbs-level3">6.2.3 Backup facilitator arrangements</div>
+          <div class="wbs-level2">6.3 Workshop Delivery</div>
+          <div class="wbs-level3">6.3.1 Session scheduling and room assignments</div>
+          <div class="wbs-level3">6.3.2 Participant registration and capacity management</div>
+          <div class="wbs-level3">6.3.3 Post-session evaluation and feedback collection</div>
+        </div>
+      </div>
+
+      <!-- 7.0 Financial Management -->
+      <div class="wbs-section">
+        <div class="wbs-level1">7.0 Financial Management</div>
+        <div class="wbs-body">
+          <div class="wbs-level2">7.1 Budget Development</div>
+          <div class="wbs-level3">7.1.1 Cost estimation and allocation</div>
+          <div class="wbs-level3">7.1.2 Revenue projection modeling</div>
+          <div class="wbs-level3">7.1.3 Budget approval from Steering Committee</div>
+          <div class="wbs-level2">7.2 Revenue Generation</div>
+          <div class="wbs-level3">7.2.1 Ticket pricing structure and sales platform setup</div>
+          <div class="wbs-level3">7.2.2 Sponsorship sales and contract execution</div>
+          <div class="wbs-level3">7.2.3 Payment processing and tracking</div>
+          <div class="wbs-level2">7.3 Financial Control &amp; Reimbursement</div>
+          <div class="wbs-level3">7.3.1 Expense tracking and authorization</div>
+          <div class="wbs-level3">7.3.2 Financial reporting and variance analysis</div>
+          <div class="wbs-level3">7.3.3 Fund reimbursement execution by March 29, 2027</div>
+        </div>
+      </div>
+
+      <!-- 8.0 Event Operations -->
+      <div class="wbs-section">
+        <div class="wbs-level1">8.0 Event Operations</div>
+        <div class="wbs-body">
+          <div class="wbs-level2">8.1 Registration System</div>
+          <div class="wbs-level3">8.1.1 Platform selection and configuration</div>
+          <div class="wbs-level3">8.1.2 Attendee data management</div>
+          <div class="wbs-level3">8.1.3 Check-in process design</div>
+          <div class="wbs-level2">8.2 Event Day Logistics</div>
+          <div class="wbs-level3">8.2.1 Volunteer recruitment and training</div>
+          <div class="wbs-level3">8.2.2 Signage, materials, and setup</div>
+          <div class="wbs-level3">8.2.3 Technical support and troubleshooting</div>
+          <div class="wbs-level2">8.3 Attendee Experience</div>
+          <div class="wbs-level3">8.3.1 Welcome and orientation</div>
+          <div class="wbs-level3">8.3.2 Networking facilitation</div>
+          <div class="wbs-level3">8.3.3 Feedback collection and satisfaction assessment</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ── 8. RACI ── -->
+    <section class="section" id="s8">
+      <div class="section-header">
+        <div class="section-number">8</div>
+        <h2 class="section-title">Responsibility Matrix (RACI)</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Activity</th>
+              <th>Ian Villarreal</th>
+              <th>Luimanol Rivas</th>
+              <th>Aníbal González</th>
+              <th>Andrés Gómez</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Project Charter Development</td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-c">C</span></td>
+            </tr>
+            <tr>
+              <td>Attendance Estimation</td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-i">I</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+            </tr>
+            <tr>
+              <td>Market Research Survey</td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-r">R</span></td>
+            </tr>
+            <tr>
+              <td>Venue Selection</td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+            </tr>
+            <tr>
+              <td>Venue Contract Negotiation</td>
+              <td><span class="raci-r">R</span></td>
+              <td><span class="raci-i">I</span></td>
+              <td><span class="raci-a">A</span></td>
+              <td><span class="raci-c">C</span></td>
+            </tr>
+            <tr>
+              <td>Marketing Strategy Development</td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+            </tr>
+            <tr>
+              <td>Advertisement Campaign Execution</td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-i">I</span></td>
+              <td><span class="raci-r">R</span></td>
+            </tr>
+            <tr>
+              <td>Budget Development &amp; Tracking</td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-i">I</span></td>
+            </tr>
+            <tr>
+              <td>Corporate Outreach</td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-i">I</span></td>
+            </tr>
+            <tr>
+              <td>Sponsorship Package Design</td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-i">I</span></td>
+            </tr>
+            <tr>
+              <td>Company Contract Finalization</td>
+              <td><span class="raci-i">I</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-a">A</span></td>
+              <td><span class="raci-i">I</span></td>
+            </tr>
+            <tr>
+              <td>Workshop Curriculum Design</td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-i">I</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+            </tr>
+            <tr>
+              <td>Workshop Facilitator Coordination</td>
+              <td><span class="raci-i">I</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+            </tr>
+            <tr>
+              <td>Workshop Delivery</td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-i">I</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+            </tr>
+            <tr>
+              <td>Registration System Setup</td>
+              <td><span class="raci-r">R</span></td>
+              <td><span class="raci-i">I</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+            </tr>
+            <tr>
+              <td>Event Day Logistics</td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+            </tr>
+            <tr>
+              <td>Financial Reconciliation</td>
+              <td><span class="raci-r">R</span></td>
+              <td><span class="raci-i">I</span></td>
+              <td><span class="raci-a">A</span></td>
+              <td><span class="raci-i">I</span></td>
+            </tr>
+            <tr>
+              <td>Final Report Preparation</td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-c">C</span></td>
+            </tr>
+            <tr>
+              <td>Reimbursement Strategy Execution</td>
+              <td><span class="raci-c">C</span></td>
+              <td><span class="raci-i">I</span></td>
+              <td><span class="raci-ar">A/R</span></td>
+              <td><span class="raci-i">I</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- RACI Legend -->
+      <div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:16px;">
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+          <span class="raci-r">R</span>
+          <span style="color:var(--neutral-600)"><strong>Responsible</strong> – Performs the work</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+          <span class="raci-a">A</span>
+          <span style="color:var(--neutral-600)"><strong>Accountable</strong> – Ultimately answerable &amp; approves</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+          <span class="raci-ar">A/R</span>
+          <span style="color:var(--neutral-600)"><strong>Accountable &amp; Responsible</strong></span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+          <span class="raci-c">C</span>
+          <span style="color:var(--neutral-600)"><strong>Consulted</strong> – Provides input; two-way communication</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:13px;">
+          <span class="raci-i">I</span>
+          <span style="color:var(--neutral-600)"><strong>Informed</strong> – Kept updated; one-way communication</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 9. Approval Signatures ── -->
+    <section class="section" id="s9">
+      <div class="section-header">
+        <div class="section-number">9</div>
+        <h2 class="section-title">Approval Signatures</h2>
+      </div>
+
+      <div class="table-wrap">
+        <table class="sig-table">
+          <thead>
+            <tr>
+              <th>Role</th>
+              <th>Name</th>
+              <th>Signature</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Project Sponsor</td>
+              <td>Campus Guadalajara Representative</td>
+              <td><span class="sig-line"></span></td>
+              <td><span class="sig-line" style="width:100px"></span></td>
+            </tr>
+            <tr>
+              <td>Project Manager</td>
+              <td>Aníbal González Urteaga</td>
+              <td><span class="sig-line"></span></td>
+              <td><span class="sig-line" style="width:100px"></span></td>
+            </tr>
+            <tr>
+              <td>Team Member</td>
+              <td>Ian Ricardo Villarreal Rios</td>
+              <td><span class="sig-line"></span></td>
+              <td><span class="sig-line" style="width:100px"></span></td>
+            </tr>
+            <tr>
+              <td>Team Member</td>
+              <td>Luimanol Rivas Torres</td>
+              <td><span class="sig-line"></span></td>
+              <td><span class="sig-line" style="width:100px"></span></td>
+            </tr>
+            <tr>
+              <td>Team Member</td>
+              <td>Andrés Crisostomo Gómez</td>
+              <td><span class="sig-line"></span></td>
+              <td><span class="sig-line" style="width:100px"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="info-box green" style="margin-top:24px;">
+        <span class="info-box-icon">📋</span>
+        <div class="info-box-body">
+          <strong>Document Control</strong>
+          <p>
+            <strong>Version:</strong> 1.0 &nbsp;|&nbsp;
+            <strong>Status:</strong> Pending Approval &nbsp;|&nbsp;
+            <strong>Next Review:</strong> Upon completion of attendance estimation (Project Start + 3 weeks)
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══════════════════════════════════════════
+       FOOTER
+  ══════════════════════════════════════════ -->
+  <footer class="doc-footer">
+    <div>
+      <strong>International Data Science Conference</strong> &nbsp;·&nbsp; Project Charter v1.0
+    </div>
+    <div>
+      Campus Guadalajara &nbsp;·&nbsp; Event Date: <strong>March 22, 2027</strong> &nbsp;·&nbsp; Reimbursement Deadline: <strong>March 29, 2027</strong>
+    </div>
+  </footer>
+
+</div>
+</body>
+</html>
